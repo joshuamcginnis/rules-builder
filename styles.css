@@ -1,0 +1,121 @@
+body {
+  font-family: helvetica,arial,sans-serif;
+}
+
+.hide {
+  display: none;
+}
+
+a {
+  color: #444444;
+  text-decoration: none;
+}
+
+h1 {
+  border-bottom: 1px solid #ccc;
+}
+
+h3 {
+  margin: 0;
+  font-weight: lighter;
+  border-bottom: 1px dotted #ccc;
+}
+
+pre {
+  white-space: pre-wrap;
+}
+
+#rules-builder {
+  border: 1px dotted #ccc;
+  padding: 1em .25em .25em .25em;
+}
+
+  .block {
+    padding: 0 .5em 0 .5em;
+    margin: 0 0 .5em 0;
+  }
+
+  .block-operator {
+    margin: 0 0 .5em 0;
+  }
+
+.block-inset {
+  border: 1px solid #999;
+  padding: .5em;
+  background-color: #efefef;
+}
+
+.rule {
+  padding: .5em;
+  background: #fafafa;
+  font-size: 12px;
+}
+
+  .rule-field-name {
+    width: 250px;
+  }
+
+  .rule-evaluator {
+    width: 175px;
+  }
+
+  .rule-criteria {
+    border: 1px solid #dedede;
+    font-family: helvetica,arial,sans-serif;
+    width: 250px;
+    padding: .5em 0 .4em .5em;
+    font-size: 1em;
+  }
+
+  .add-rule-btn, .remove-rule-btn {
+    border: 1px solid #dedede;
+    background: #f5f5f5;
+    font-weight: lighter;
+    padding: .25em;
+  }
+
+  .add-rule-btn:hover, .remove-rule-btn:hover {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    border: 1px solid #B6B6B6;
+    color: #222;
+  }
+
+  .rule-and-or-text {
+  }
+
+  .rule-group {
+    margin: 0 0 .5em 0;
+  }
+
+    .rule-group-operator {
+      margin: 0 0 .5em 0;
+    }
+
+.ruleset-operator {
+  font-size: .75em;
+  padding: .5em;
+  background: #fff;
+}
+
+.block-header {
+  font-size: 12px;
+  margin: 0 0 .5em 0;
+}
+
+  .rule-options, .block-options, .rule-group-options {
+    margin-bottom: 0;
+    font-size: 12px;
+  }
+
+  .rule-options {
+    display: inline;
+  }
+
+.rule-options.hide {
+  display: none;
+}
+
+  .block-options {
+    text-align: right;
+    margin: 0 .5em 0 0;
+  }

@@ -1,0 +1,257 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <link rel="stylesheet" href="styles.css" type="text/css" media="all" />
+
+  <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+  <script src="jquery-ui-1.8.22.custom.min.js"></script>
+  <script>
+  window.RulesBuilder = {
+
+    init: function() {
+      this.setBlockCount();
+      this.handleAddBlock(); 
+      this.handleShowRuleOptions();
+      this.handleAddRule();
+      this.handleAddRuleGroup();
+      this.handleRemoveRule();
+      this.handleRuleSetOperator(); // the any/all of the following ...
+      this.handleSortableRules();
+      this.handleSubmit();
+      },
+
+      handleSubmit: function() {
+        var results = {};
+
+        $('#submit').click(function () {
+
+          //add blocks
+          results.block = [];
+          $('.block').each(function(key) {
+            results.block[key] = {};
+            var b = results.block[key];
+            b.name = $(this).find('.block-header h3').html();
+            b.operator = "OR";
+
+            // add groups
+            b.rule_group = [];
+            $(this).find('.rule-group').each(function(key) {
+              b.rule_group[key] = {};
+              var rg = b.rule_group[key];
+              rg.operator = "AND"; // need to get this value
+
+              // add rules
+              rg.rules = [];
+              $(this).find('.rule').each(function(key) {
+                rg.rules[key] = {};
+                var r = rg.rules[key];
+
+                r.field = 'some field';
+                r.evaluator = '<';
+                r.criteria = 'some value';
+              });
+            });
+
+          });
+
+          console.log(JSON.stringify(results));
+          $('#results pre').html(JSON.stringify(results));
+          return false;
+        });
+
+      },
+
+      handleSortableRules: function() {
+        $('.rules').sortable({ items: '.rule' });
+      },
+
+      handleAddRuleGroup: function() {
+        $('.add-rule-group-btn').live('click', function() {
+          var newRuleGroup = $(this).parents('.rules').children('.rule-group').first().clone();
+          newRuleGroup.find('.rule-group-operator').removeClass('hide');
+
+          newRuleGroup.insertAfter($(this).parents('.rules').children('.rule-group').last());
+          return false;
+        });
+      },
+
+      handleRuleSetOperator: function() {
+        $('.ruleset-operator select.any-all').live('change', function() {
+          var val = $(this).val();
+
+          $(this).parents('.rules').find('.rule-and-or-text').each(function() {
+            console.log($(this));
+          });
+
+          if (val == 'all') {
+            $(this).parents('.rules').find('.rule-and-or-text').each(function() {
+              $(this).html('and');
+            })
+          }
+
+          if (val == 'any') {
+            $(this).parents('.rules').find('.rule-and-or-text').each(function() {
+              $(this).html('or');
+            })
+          }
+        });
+      },
+
+      handleShowRuleOptions: function() {
+        $('.rule').live('mouseenter', function() {
+          $(this).children('.rule-options').removeClass('hide');
+        }).live('mouseleave', function() {
+          $(this).children('.rule-options').addClass('hide');
+        });
+      },
+
+      handleAddRule: function() {
+        
+        var _self = this;
+
+        $('.add-rule-btn').live('click', function() {
+          var parentRuleGroup = $(this).parents('.rule');
+          var newRule = $('.rule:first').clone();
+
+          newRule.insertAfter($(this).parents('.rule'));
+
+          return false;
+        });
+      },
+
+      handleRemoveRule: function() {
+        $('.remove-rule-btn').live('click', function() {
+          $(this).parents('.rule').detach();
+          return false;
+        });
+      },
+
+      handleAddBlock: function() {
+
+        var _self = this;
+
+        $('#add-block-btn').click(function() {
+          var newBlock = $('.block:first').clone();
+          newBlock.find('h3').html('Block ' + (_self.blockCount + 1));
+          newBlock.find('.block-operator').removeClass('hide');
+          newBlock.data('block-id', _self.blockCount + 1)
+          
+          newBlock.insertBefore('.block-options');
+
+          _self.setBlockCount();
+          return false;
+        });
+      },
+
+      setBlockCount: function() {
+        this.blockCount = $('.block').size();
+      }
+    };
+
+    $(document).ready(function() {
+      RulesBuilder.init();
+    });
+
+    </script>
+  </head>
+
+  <body>
+    <h1>Rules Builder</h1>
+    <div id="rules-builder">
+      <div class="block" data-block-id="1">
+
+        <div class="block-operator hide">
+          <select>
+            <option>and</option>
+            <option>or</option>
+          </select>
+        </div>
+
+        <div class="block-inset">
+
+          <div class="block-header">
+            <h3 contenteditable>Block 1</h3>
+          </div>
+
+          <div class="rules">
+
+            <div class="rule-group" data-rule-group-id="1">
+
+              <div class="rule-group-operator hide">
+                <select>
+                  <option>and</option>
+                  <option>or</option>
+                </select>
+              </div>
+
+              <div class="ruleset-operator">
+                <strong>Pass</strong> this group if
+                <select class="any-all">
+                  <option value="all" selected="selected">all</option>
+                  <option value="any">any</option>
+                </select>
+                of the following are true:
+              </div>
+
+              <div class="rule">
+                <span class="rule-and-or-text">and</span>
+
+                <select name="rule-field-name" class="field-name">
+                  <option value="">Select a field...</option>
+                </select>
+
+                <select name="field" class="rule-evaluator">
+                  <option value="equal">is equal to</option>
+                </select>
+
+                <input name="test" type="text" class="rule-criteria" />
+
+                <div class="rule-options hide">
+                  <a href="#" class="add-rule-btn">Add Rule</a>
+                  <a href="#" class="remove-rule-btn">Remove</a>
+                </div>
+              </div>
+            </div>
+
+            <p class="rule-group-options"><a href="#" class="add-rule-group-btn">Add Rule Group</a></p>
+          </div>
+        </div>
+      </div>
+      <p class="block-options">
+        <a href="#" id="add-block-btn">Add Block</a>
+      </p>
+
+      <input type="submit" id="submit" value="get json">
+    </div> <!-- #rules-builder -->
+
+    <div id="results">
+      <h2>Results</h2>
+      <pre>
+
+      </pre>
+    </div>
+
+    
+    <style>
+    #notes {
+      font-size: .75em;
+    }
+    </style>
+    <div id="notes">
+      <h2>Notes/Todo</h2>
+      <ul>
+        <li>figure out where to source empty/reset 'block' and 'rule' boilerplate for cloning
+          <ul>
+            <li>this will fix the sticky rule options when adding a new rule - boilerplate needs to have the hide class added</li>
+            <li>This will also let you fix hiding </li>
+            <li>will also fix the default and/or bug</li>
+          </ul>
+        </li>
+        <li>implement data attributes in a structure that makes sense to other devs</li>
+        <li>add a submit that shows the json object produced</li>
+      </ul>
+    </div>
+  </body>
+  </html>
